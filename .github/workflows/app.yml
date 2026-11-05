@@ -1,0 +1,43 @@
+# Builds the Runa app for Android and puts it on the release page "app", where the phone downloads it:
+# https://github.com/lordfran28/Runa/releases/download/app/Runa.apk
+# Only changes to the app itself need a new build; the book inside it is the website, so new passages
+# and changes to the site reach the app on their own.
+name: App
+on:
+  push:
+    branches: [main]
+    paths: ["app/**", ".github/workflows/app.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: app
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+      - name: Build the app
+        working-directory: app
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          KEYSTORE_PASSWORD: ${{ secrets.RUNA_SIGNING }}
+        run: |
+          if [ -z "$KEYSTORE_PASSWORD" ]; then echo "::error::The secret RUNA_SIGNING isn't set, so the app can't be signed."; exit 1; fi
+          export KEYSTORE="$GITHUB_WORKSPACE/app/signing/runa.p12"
+          gradle --no-daemon assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/Runa.apk"
+      - name: Put it on the release page
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view app >/dev/null 2>&1 || gh release create app --title "Runa for Android" --notes "Open this page on the phone and tap Runa.apk to install or update the app."
+          gh release upload app "$RUNNER_TEMP/Runa.apk" --clobber
