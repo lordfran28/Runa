@@ -1,0 +1,35 @@
+# Publishes the site. The list of entries (data/index.json) is made here, from the locked files in data/,
+# so a passage added from a phone or the PC shows on every device as soon as this finishes.
+name: Site
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["app/**", ".github/workflows/app.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: List the entries
+        run: python3 .github/scripts/data_index.py
+      - name: Gather the site
+        run: |
+          mkdir _site
+          cp -r index.html sw.js manifest.webmanifest .nojekyll assets data _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

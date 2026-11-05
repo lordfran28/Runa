@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Runa</title>
+<meta name="theme-color" content="#ECE5D8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131110" media="(prefers-color-scheme: dark)">
+<meta name="description" content="A private book.">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="preload" href="assets/fonts/eb-garamond-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/im-fell-french-canon-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-normal.woff2") format("woff2")}
+@font-face{font-family:"EB Garamond";font-style:italic;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-italic.woff2") format("woff2")}
+@font-face{font-family:"IM Fell French Canon";font-style:normal;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IM Fell French Canon";font-style:italic;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-italic.woff2") format("woff2")}
+/* Runa: Gothic for "secret" and "counsel". A private book of passages, novels and films, kept like the
+   Finder sites (one reading column, parchment cards, the same type) with a quiet Gothic variance: the
+   garnet, worn gold and dark iron of the Visigothic and Ostrogothic brooches. */
+:root{
+  --bg:#ECE5D8;--surface:#F8F3EA;--well:#E9E1D2;--ink:#1F1A17;--muted:#63584F;--line:#D3C5AF;
+  --accent:#7A1F24;--accent-hi:#952B31;--accent-soft:#F0DEDA;--gold:#8E6E27;
+  --warn:#9C3424;
+  --display:"IM Fell French Canon",Garamond,"Times New Roman",serif;
+  --body:"EB Garamond",Garamond,"Garamond Premier Pro",Georgia,serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131110;--surface:#1C1817;--well:#25201E;--ink:#ECE3D5;--muted:#B1A392;--line:#3B312D;
+    --accent:#E2A097;--accent-hi:#F0BDB5;--accent-soft:#36201E;--gold:#CFAB5C;
+    --warn:#EE9A85;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.55 var(--body);
+  padding:max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wrap{max-width:44rem;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.view{display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;letter-spacing:.005em;text-wrap:balance}
+h1{font-size:clamp(2.8rem,11vw,3.6rem);line-height:.95}
+h2{font-size:1.8rem;line-height:1.1}
+h3{font-size:1.25rem;line-height:1.2}
+a{color:var(--accent)}
+p{margin:0}
+.small{font-size:.98rem;color:var(--muted)}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* The title, between two gold rules */
+.title{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:14px 0 12px;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);box-shadow:0 -4px 0 -3px var(--gold) inset,0 4px 0 -3px var(--gold) inset}
+.title a{color:inherit;text-decoration:none}
+.title .line{font-style:italic;color:var(--muted)}
+.nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;font-size:1.12rem}
+.nav a{text-decoration:none;color:var(--muted)}
+.nav a[aria-current="page"]{color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.nav .n{font-size:.85rem;color:var(--muted);font-variant-numeric:lining-nums;margin-left:3px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:16px 18px;color:var(--ink);text-decoration:none;display:block}
+a.card:hover{border-color:var(--accent)}
+.today{padding:22px 22px 18px;outline:1px solid var(--line);outline-offset:3px;margin:4px}
+.eyebrow{font-variant-caps:all-small-caps;letter-spacing:.14em;color:var(--gold);font-size:1.05rem;line-height:1}
+.text{white-space:pre-line;font-size:1.22rem;line-height:1.6;margin:10px 0 0}
+.today .text{font-size:1.32rem}
+.text.clip{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.src{margin-top:10px;color:var(--muted);font-size:1.02rem}
+.src cite{font-style:italic}
+.note{margin-top:8px;font-style:italic;color:var(--ink);opacity:.85}
+.heads{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px}
+.heads a,.heads span{font-variant-caps:all-small-caps;letter-spacing:.1em;font-size:1rem;color:var(--accent);text-decoration:none}
+.ctitle{font:400 1.45rem/1.15 var(--display)}
+.cmeta{color:var(--muted);font-size:1.02rem;margin-top:2px}
+.list{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips a{font-size:1rem;border:1px solid var(--line);border-radius:999px;padding:3px 11px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.chips a[aria-current="true"]{border-color:var(--accent);color:var(--accent)}
+.chips .n{color:var(--muted);font-size:.85rem;margin-left:4px;font-variant-numeric:lining-nums}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.spread{justify-content:space-between}
+
+/* Buttons and fields */
+.btn{font:inherit;font-size:1.1rem;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--surface);border-radius:2px;padding:8px 16px;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn:hover{background:var(--accent-hi);border-color:var(--accent-hi)}
+.btn.quiet{background:transparent;color:var(--accent)}
+.btn.quiet:hover{background:var(--accent-soft)}
+.btn.link{border:0;background:none;color:var(--accent);padding:6px 0;min-height:0;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.btn.warn{border-color:var(--warn);background:transparent;color:var(--warn)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-variant-caps:all-small-caps;letter-spacing:.1em;color:var(--muted);font-size:1rem;line-height:1}
+input,textarea,select{font:inherit;font-size:1.08rem;color:var(--ink);background:var(--well);border:1px solid var(--line);border-radius:2px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:9rem;resize:vertical;line-height:1.5}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.seg{display:flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;width:max-content;max-width:100%}
+.seg a{padding:7px 14px;text-decoration:none;color:var(--ink);background:var(--surface);font-size:1.05rem}
+.seg a+a{border-left:1px solid var(--line)}
+.seg a[aria-current="true"]{background:var(--accent);color:var(--surface)}
+.msg{font-style:italic;color:var(--muted)}
+.msg.err{color:var(--warn);font-style:normal}
+.qr{width:13.5rem;max-width:100%;background:#fff;padding:10px;border:1px solid var(--line);border-radius:2px}
+.qr svg{display:block;width:100%;height:auto}
+.closed{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 0;text-align:center}
+.closed p{font-style:italic;color:var(--muted);font-size:1.2rem}
+.foot{text-align:center;margin-top:10px}
+.foot a{color:var(--muted);font-size:.98rem}
+hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="title">
+    <h1><a href="#">Runa</a></h1>
+    <p class="line">Passages, novels and films that stayed.</p>
+    <nav class="nav" id="nav" aria-label="The book" hidden>
+      <a href="#passages" data-v="passages">Passages<span class="n" id="n-passage"></span></a>
+      <a href="#novels" data-v="novels">Novels<span class="n" id="n-novel"></span></a>
+      <a href="#films" data-v="films">Films<span class="n" id="n-film"></span></a>
+      <a href="#headings" data-v="headings">Headings</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="v-closed" class="view closed" hidden>
+      <p>This book is closed.</p>
+      <a class="btn quiet" href="#keys">Open it</a>
+    </section>
+
+    <section id="v-loading" class="view closed"><p>Opening…</p></section>
+
+    <section id="v-home" class="view" hidden>
+      <article id="today" class="card today" aria-labelledby="today-h"></article>
+      <div class="row spread"><a class="btn link" href="#" id="another">Another</a><a class="btn quiet" href="#add/passage" data-needs-gh>Add a passage</a></div>
+      <section aria-labelledby="hh-h" id="homeheads-wrap"><h3 id="hh-h" class="vh">Headings</h3><div class="chips" id="homeheads"></div></section>
+    </section>
+
+    <section id="v-list" class="view" hidden>
+      <div class="row spread"><h2 id="list-h"></h2><a class="btn quiet" id="list-add" data-needs-gh href="#">Add</a></div>
+      <div class="field"><label for="q" class="vh">Search</label><input id="q" type="search" placeholder="Search" autocomplete="off"></div>
+      <div class="chips" id="listheads"></div>
+      <ul class="list" id="list"></ul>
+      <p class="msg" id="list-empty" hidden></p>
+    </section>
+
+    <section id="v-heads" class="view" hidden>
+      <h2>Headings</h2>
+      <div class="chips" id="allheads"></div>
+      <p class="msg" id="heads-empty" hidden>No headings yet.</p>
+    </section>
+
+    <section id="v-entry" class="view" hidden>
+      <article id="entry" class="card today"></article>
+      <div class="row spread"><a class="btn link" href="#" id="entry-back">Back</a><a class="btn quiet" id="entry-edit" data-needs-gh href="#">Change</a></div>
+    </section>
+
+    <section id="v-form" class="view" hidden>
+      <h2 id="form-h"></h2>
+      <nav class="seg" id="form-kind" aria-label="Kind">
+        <a href="#add/passage" data-k="passage">Passage</a><a href="#add/novel" data-k="novel">Novel</a><a href="#add/film" data-k="film">Film</a>
+      </nav>
+      <form id="form" class="view" novalidate>
+        <div class="field" data-for="passage"><label for="f-text">Passage</label><textarea id="f-text"></textarea></div>
+        <div class="field" data-for="novel film"><label for="f-title">Title</label><input id="f-title" autocomplete="off"></div>
+        <div class="two">
+          <div class="field" data-for="passage"><label for="f-book">Book</label><input id="f-book" autocomplete="off" list="books"></div>
+          <div class="field" data-for="passage novel"><label for="f-author">Author</label><input id="f-author" autocomplete="off" list="authors"></div>
+          <div class="field" data-for="film"><label for="f-director">Director</label><input id="f-director" autocomplete="off"></div>
+          <div class="field" data-for="passage"><label for="f-where">Where in it</label><input id="f-where" autocomplete="off" placeholder="chapter, page"></div>
+          <div class="field" data-for="novel film"><label for="f-year">Year</label><input id="f-year" inputmode="numeric" autocomplete="off"></div>
+        </div>
+        <div class="field"><label for="f-note">Your note</label><textarea id="f-note" style="min-height:5rem"></textarea></div>
+        <div class="field"><label for="f-heads">Headings</label><input id="f-heads" autocomplete="off" placeholder="separated by commas"></div>
+        <div class="chips" id="f-headpick"></div>
+        <datalist id="books"></datalist><datalist id="authors"></datalist>
+        <p class="msg" id="form-msg" role="status"></p>
+        <div class="row spread">
+          <div class="row"><button class="btn" type="submit" id="f-save">Keep it</button><a class="btn link" href="#" id="f-cancel">Cancel</a></div>
+          <button class="btn warn" type="button" id="f-del" hidden>Take it out</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="v-keys" class="view" hidden>
+      <h2>Keys</h2>
+      <section class="view" aria-labelledby="k1">
+        <h3 id="k1">The singer key</h3>
+        <p class="small" id="k-status"></p>
+        <div class="field" id="k-entry"><label for="k-in">Key</label><input id="k-in" autocomplete="off" spellcheck="false"></div>
+        <div class="row"><button class="btn" type="button" id="k-save">Open the book</button><button class="btn link" type="button" id="k-forget" hidden>Remove it from this device</button></div>
+      </section>
+      <hr class="rule">
+      <section class="view" aria-labelledby="k2">
+        <h3 id="k2">The GitHub key</h3>
+        <p class="small" id="g-status"></p>
+        <div class="field" id="g-entry"><label for="g-in">Key</label><input id="g-in" autocomplete="off" spellcheck="false"></div>
+        <div class="row"><button class="btn" type="button" id="g-save">Keep it</button><button class="btn link" type="button" id="g-forget" hidden>Remove it from this device</button></div>
+      </section>
+      <hr class="rule">
+      <section class="view" aria-labelledby="k3" id="pairsec">
+        <h3 id="k3">Your phone</h3>
+        <div class="row"><button class="btn quiet" type="button" id="pair">Show the code</button><button class="btn quiet" type="button" id="scan" hidden>Scan the code</button></div>
+        <div id="qr" class="qr" role="img" aria-label="Code that puts both keys on your phone" hidden></div>
+      </section>
+      <section class="view" aria-labelledby="k4" id="daily" hidden>
+        <hr class="rule">
+        <h3 id="k4">Each day</h3>
+        <div class="row"><div class="field" style="width:9rem"><label for="d-time">Time</label><input id="d-time" type="time" value="08:00"></div>
+          <button class="btn quiet" type="button" id="d-on" aria-pressed="false">Send a passage</button></div>
+        <p class="small" id="d-status"></p>
+      </section>
+      <p class="msg" id="keys-msg" role="status"></p>
+    </section>
+  </main>
+  <footer class="foot"><a href="#keys">Keys</a></footer>
+</div>
+
+<script src="assets/runa.js"></script>
+<script>
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+var R = window.Runa, APP = window.RunaApp || null;
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function fold(s){ return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+function today(){ var d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000); }
+var ready = false;
+
+/* ---------- Views ---------- */
+var VIEWS = ["closed", "loading", "home", "list", "heads", "entry", "form", "keys"];
+function show(v){
+  VIEWS.forEach(function(x){ $("v-" + x).hidden = x !== v; });
+  var cur = location.hash.replace(/^#/, "").split("/")[0];
+  Array.prototype.forEach.call(document.querySelectorAll("#nav a"), function(a){ a.setAttribute("aria-current", a.dataset.v === cur ? "page" : "false"); });
+  window.scrollTo(0, 0);
+}
+function needsGh(){
+  var has = !!R.ghKey();
+  Array.prototype.forEach.call(document.querySelectorAll("[data-needs-gh]"), function(el){ el.hidden = !has; });
+}
+
+/* ---------- The entries ---------- */
+var KINDS = {passages: "passage", novels: "novel", films: "film"};
+var NAMES = {passage: "Passages", novel: "Novels", film: "Films"};
+function all(kind){ return R.entries().filter(function(e){ return !kind || e.kind === kind; }); }
+function byId(id){ return R.entries().filter(function(e){ return e.id === id; })[0]; }
+function headsOf(e){ return (e.heads || []).filter(Boolean); }
+function headList(kind){
+  var c = {};
+  all(kind).forEach(function(e){ headsOf(e).forEach(function(h){ var k = fold(h); if (!c[k]) c[k] = {name: h, n: 0}; c[k].n++; }); });
+  return Object.keys(c).map(function(k){ return c[k]; }).sort(function(a, b){ return b.n - a.n || a.name.localeCompare(b.name); });
+}
+function headHref(h){ return "#h/" + encodeURIComponent(h); }
+function srcLine(e){
+  if (e.kind === "passage"){
+    var bits = [];
+    if (e.author) bits.push(esc(e.author));
+    if (e.book) bits.push("<cite>" + esc(e.book) + "</cite>");
+    if (e.where) bits.push(esc(e.where));
+    return bits.join(", ");
+  }
+  var who = e.kind === "film" ? e.director : e.author;
+  return [who, e.year].filter(Boolean).map(esc).join(" · ");
+}
+function headsHTML(e){ var h = headsOf(e); return h.length ? '<div class="heads">' + h.map(function(x){ return '<a href="' + headHref(x) + '">' + esc(x) + "</a>"; }).join("") + "</div>" : ""; }
+function cardHTML(e, full){
+  if (e.kind === "passage")
+    return '<p class="text' + (full ? "" : " clip") + '">' + esc(e.text) + '</p><p class="src">' + srcLine(e) + "</p>" + (full && e.note ? '<p class="note">' + esc(e.note) + "</p>" : "") + (full ? headsHTML(e) : "");
+  return '<p class="ctitle">' + esc(e.title) + '</p><p class="cmeta">' + srcLine(e) + "</p>" + (e.note ? '<p class="note">' + esc(e.note) + "</p>" : "") + (full ? headsHTML(e) : "");
+}
+function itemHTML(e){ return '<li><a class="card" href="#e/' + encodeURIComponent(e.id) + '">' + cardHTML(e, false) + "</a></li>"; }
+
+/* Today's passage: the same on every device. Each passage comes once before any comes twice. */
+function h32(s){ var h = 2166136261; for (var i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function passageOn(day){
+  var ps = all("passage"); if (!ps.length) return null;
+  var ids = ps.map(function(p){ return p.id; }).sort(), n = ids.length, cyc = Math.floor(day / n);
+  var order = ids.slice().sort(function(a, b){ return h32(a + ":" + cyc) - h32(b + ":" + cyc) || (a < b ? -1 : 1); });
+  return byId(order[((day % n) + n) % n]);
+}
+var shownId = null;
+function renderHome(other){
+  var p = other ? (function(){ var ps = all("passage").filter(function(x){ return x.id !== shownId; }); return ps[Math.floor(Math.random() * ps.length)]; })() : passageOn(today());
+  if (!other) shownId = p && p.id;
+  else if (p) shownId = p.id;
+  $("today").innerHTML = p ? '<p class="eyebrow" id="today-h">' + (other ? "Another" : "Today") + "</p>" + cardHTML(p, true) +
+      '<p style="margin-top:10px"><a class="btn link" href="#e/' + encodeURIComponent(p.id) + '">Open</a></p>'
+    : '<p class="eyebrow" id="today-h">Today</p><p class="msg" style="margin-top:8px">No passages yet.</p>';
+  $("another").hidden = all("passage").length < 2;
+  var hs = headList();
+  $("homeheads").innerHTML = hs.map(function(h){ return '<a href="' + headHref(h.name) + '">' + esc(h.name) + '<span class="n">' + h.n + "</span></a>"; }).join("");
+  $("homeheads-wrap").hidden = !hs.length;
+}
+function counts(){
+  ["passage", "novel", "film"].forEach(function(k){ var n = all(k).length; $("n-" + k).textContent = n ? n : ""; });
+}
+
+var listKind = "passage", listHead = "";
+function renderList(){
+  var q = fold($("q").value.trim());
+  var items = all(listKind).filter(function(e){
+    if (listHead && !headsOf(e).some(function(h){ return fold(h) === fold(listHead); })) return false;
+    if (!q) return true;
+    return fold([e.text, e.title, e.book, e.author, e.director, e.where, e.note, e.year, headsOf(e).join(" ")].join(" ")).indexOf(q) >= 0;
+  });
+  if (listKind === "passage") items.sort(function(a, b){ return String(b.added || "").localeCompare(String(a.added || "")); });
+  else items.sort(function(a, b){ return String(a.title || "").localeCompare(String(b.title || ""), undefined, {sensitivity: "base"}); });
+  $("list").innerHTML = items.map(itemHTML).join("");
+  $("list-empty").hidden = !!items.length;
+  $("list-empty").textContent = all(listKind).length ? "Nothing matches." : "None yet.";
+  var hs = headList(listKind);
+  $("listheads").innerHTML = hs.length ? '<a href="#' + listKind + 's" aria-current="' + (!listHead) + '">All</a>' + hs.map(function(h){
+    return '<a href="#' + listKind + "s/" + encodeURIComponent(h.name) + '" aria-current="' + (fold(h.name) === fold(listHead)) + '">' + esc(h.name) + '<span class="n">' + h.n + "</span></a>"; }).join("") : "";
+}
+$("q").addEventListener("input", renderList);
+
+function renderHeading(h){
+  $("list-h").textContent = h;
+  var items = R.entries().filter(function(e){ return headsOf(e).some(function(x){ return fold(x) === fold(h); }); });
+  var order = {passage: 0, novel: 1, film: 2};
+  items.sort(function(a, b){ return order[a.kind] - order[b.kind] || String(a.title || a.book || "").localeCompare(String(b.title || b.book || "")); });
+  $("list").innerHTML = items.map(itemHTML).join("");
+  $("list-empty").hidden = !!items.length; $("list-empty").textContent = "Nothing under this heading.";
+  $("listheads").innerHTML = ""; $("q").parentNode.hidden = true; $("list-add").hidden = true;
+}
+
+/* ---------- Adding and changing ---------- */
+var editing = null, formKind = "passage";
+var F = ["text", "title", "book", "author", "director", "where", "year", "note"];
+function fillForm(kind, e){
+  formKind = kind; editing = e || null;
+  $("form-h").textContent = e ? "Change" : "Add";
+  $("form-kind").hidden = !!e;
+  Array.prototype.forEach.call($("form-kind").querySelectorAll("a"), function(a){ a.setAttribute("aria-current", String(a.dataset.k === kind)); });
+  Array.prototype.forEach.call(document.querySelectorAll("#form [data-for]"), function(el){ el.hidden = el.dataset.for.split(" ").indexOf(kind) < 0; });
+  F.forEach(function(f){ $("f-" + f).value = e && e[f] ? e[f] : ""; });
+  $("f-heads").value = e ? headsOf(e).join(", ") : "";
+  $("f-del").hidden = !e; $("f-del").dataset.sure = "";  $("f-del").textContent = "Take it out";
+  $("form-msg").textContent = ""; $("form-msg").className = "msg";
+  $("f-save").disabled = false;
+  var books = {}, authors = {};
+  R.entries().forEach(function(x){ if (x.book) books[x.book] = 1; if (x.author) authors[x.author] = 1; });
+  $("books").innerHTML = Object.keys(books).sort().map(function(b){ return '<option value="' + esc(b) + '">'; }).join("");
+  $("authors").innerHTML = Object.keys(authors).sort().map(function(b){ return '<option value="' + esc(b) + '">'; }).join("");
+  headPick();
+}
+function headPick(){
+  var have = $("f-heads").value.split(",").map(function(s){ return fold(s.trim()); });
+  $("f-headpick").innerHTML = headList().filter(function(h){ return have.indexOf(fold(h.name)) < 0; }).slice(0, 30)
+    .map(function(h){ return '<a href="#" data-h="' + esc(h.name) + '">+ ' + esc(h.name) + "</a>"; }).join("");
+}
+$("f-heads").addEventListener("input", headPick);
+$("f-headpick").addEventListener("click", function(ev){
+  var a = ev.target.closest("a[data-h]"); if (!a) return; ev.preventDefault();
+  var v = $("f-heads").value.trim().replace(/,\s*$/, "");
+  $("f-heads").value = (v ? v + ", " : "") + a.dataset.h; headPick();
+});
+function formMsg(t, err){ $("form-msg").textContent = t; $("form-msg").className = "msg" + (err ? " err" : ""); }
+function ghError(e){
+  if (e && (e.status === 401 || e.status === 403)) return "GitHub didn't accept the key. Put a new one in on the Keys page.";
+  if (e && e.status === 409) return "It changed somewhere else at the same time. Go back and try again.";
+  return "It couldn't be kept just now. Check the connection and try again.";
+}
+$("form").addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var e = editing ? JSON.parse(JSON.stringify(editing)) : {kind: formKind};
+  F.forEach(function(f){ var v = $("f-" + f).value.trim(); if (v) e[f] = v; else delete e[f]; });
+  var hs = [], seen = {};
+  $("f-heads").value.split(",").forEach(function(s){ s = s.trim(); if (s && !seen[fold(s)]){ seen[fold(s)] = 1; hs.push(s); } });
+  if (hs.length) e.heads = hs; else delete e.heads;
+  if (e.kind === "passage" && !e.text) return formMsg("The passage is empty.", true);
+  if (e.kind !== "passage" && !e.title) return formMsg("It needs a title.", true);
+  $("f-save").disabled = true; formMsg("Keeping it…");
+  R.save(e).then(function(saved){
+    clearShared(); counts();
+    location.hash = "#e/" + encodeURIComponent(saved.id);
+  }, function(err){ $("f-save").disabled = false; formMsg(ghError(err), true); });
+});
+$("f-cancel").addEventListener("click", function(ev){ ev.preventDefault(); clearShared(); history.length > 1 ? history.back() : (location.hash = "#"); });
+$("f-del").addEventListener("click", function(){
+  var b = $("f-del");
+  if (!b.dataset.sure){ b.dataset.sure = "1"; b.textContent = "Take it out for good"; return; }
+  b.disabled = true; formMsg("Taking it out…");
+  R.remove(editing).then(function(){ counts(); location.hash = "#" + editing.kind + "s"; }, function(err){ b.disabled = false; formMsg(ghError(err), true); });
+});
+
+/* Something shared into the app from another one, such as a highlight from a book */
+var shared = null;
+function clearShared(){ shared = null; }
+function takeShared(text, subject){
+  var t = String(text || "").replace(/\r/g, "").trim(), book = "", author = "";
+  t = t.replace(/https?:\/\/\S+/g, "").trim();
+  var lines = t.split("\n").map(function(s){ return s.trim(); });
+  for (var i = lines.length - 1; i >= 0 && i >= lines.length - 3; i--){
+    var m = /^(?:from\s+)?["“]?(.+?)["”]?\s+by\s+(.+?)\.?$/i.exec(lines[i]);
+    if (m && lines[i].length < 160){ book = m[1]; author = m[2]; lines.splice(i, 1); break; }
+  }
+  t = lines.join("\n").trim().replace(/^["“](.*)["”]$/s, "$1").trim();
+  if (!book && subject && !/^https?:/.test(subject)) book = String(subject).trim();
+  shared = {text: t, book: book, author: author};
+  location.hash = "#add/passage";
+  route();
+}
+window.runaShared = takeShared;
+
+/* ---------- Keys ---------- */
+function keysMsg(t, err){ $("keys-msg").textContent = t || ""; $("keys-msg").className = "msg" + (err ? " err" : ""); }
+function renderKeys(){
+  var k = R.key(), g = R.ghKey();
+  $("k-status").textContent = k ? "This device holds it, so the book opens here." : "Without it the book stays closed.";
+  $("k-entry").hidden = !!k; $("k-save").hidden = !!k; $("k-forget").hidden = !k;
+  $("g-status").textContent = g ? "This device holds it, so you can add and change things here." : "With it you can add and change things on this device.";
+  $("g-entry").hidden = !!g; $("g-save").hidden = !!g; $("g-forget").hidden = !g;
+  $("pairsec").hidden = !k && !APP;
+  $("pair").hidden = !k || !!APP;
+  $("scan").hidden = !(APP && APP.scan);
+  $("qr").hidden = true;
+  $("daily").hidden = !(APP && APP.setReminder);
+  if (APP && APP.getReminder){
+    var r = String(APP.getReminder() || "");
+    if (r) $("d-time").value = r;
+    $("d-on").setAttribute("aria-pressed", String(!!r));
+    $("d-on").textContent = r ? "Stop sending" : "Send a passage";
+    $("d-status").textContent = r ? "A passage comes each day at " + r + "." : "";
+  }
+}
+$("k-save").addEventListener("click", function(){
+  var v = $("k-in").value.trim(); if (!v) return;
+  keysMsg("Checking…");
+  R.testKey(v).then(function(ok){
+    if (!ok) return keysMsg("That isn't the key.", true);
+    R.setKey(v); $("k-in").value = ""; keysMsg(""); start();
+  });
+});
+$("k-forget").addEventListener("click", function(){ R.setKey(""); renderKeys(); keysMsg("Removed from this device."); });
+$("g-save").addEventListener("click", function(){
+  var v = $("g-in").value.trim(); if (!v) return;
+  keysMsg("Checking…");
+  R.checkGh(v).then(function(ok){
+    if (!ok) return keysMsg("GitHub didn't accept that key for Runa.", true);
+    R.setGhKey(v); $("g-in").value = ""; keysMsg(""); renderKeys(); needsGh();
+  });
+});
+$("g-forget").addEventListener("click", function(){ R.setGhKey(""); renderKeys(); needsGh(); keysMsg("Removed from this device."); });
+function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+function unb64u(s){ s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return decodeURIComponent(escape(atob(s))); }
+$("pair").addEventListener("click", function(){
+  if (!$("qr").hidden){ $("qr").hidden = true; $("qr").innerHTML = ""; $("pair").textContent = "Show the code"; return; }
+  var payload = {v: R.key()}; if (R.ghKey()) payload.g = R.ghKey();
+  var link = location.origin + location.pathname + "#connect=" + b64u(JSON.stringify(payload));
+  var s = document.createElement("script"); s.src = "assets/vendor/qrcode.js";
+  s.onload = function(){ var q = window.qrcode(0, "L"); q.addData(link); q.make(); $("qr").innerHTML = q.createSvgTag(4, 0); $("qr").hidden = false; $("pair").textContent = "Hide the code"; };
+  s.onerror = function(){ keysMsg("The code couldn't be made. Try again.", true); };
+  window.qrcode ? s.onload() : document.head.appendChild(s);
+});
+function takeConnect(text){
+  var m = /#connect=([A-Za-z0-9_-]+)/.exec(String(text || ""));
+  if (!m) return Promise.resolve(false);
+  var p; try { p = JSON.parse(unb64u(m[1])); } catch(e){ return Promise.resolve(false); }
+  return R.testKey(p.v || "").then(function(ok){
+    if (!ok) return false;
+    R.setKey(p.v);
+    if (p.g) R.setGhKey(p.g);
+    return true;
+  });
+}
+window.runaScanned = function(text){
+  takeConnect(text).then(function(ok){ if (ok){ keysMsg("Both keys are on this device now."); start(); } else keysMsg("That code isn't from Runa.", true); });
+};
+$("scan").addEventListener("click", function(){ if (APP && APP.scan) APP.scan(); });
+$("d-on").addEventListener("click", function(){
+  if (!APP) return;
+  var on = $("d-on").getAttribute("aria-pressed") === "true";
+  if (on) APP.setReminder(""); else APP.setReminder($("d-time").value || "08:00");
+  renderKeys();
+});
+$("d-time").addEventListener("change", function(){ if (APP && $("d-on").getAttribute("aria-pressed") === "true") { APP.setReminder($("d-time").value); renderKeys(); } });
+
+/* The coming days' passages, for the app's widget and its daily note */
+function feedApp(){
+  if (!APP || !APP.setSchedule) return;
+  var t = today(), days = [];
+  for (var d = t; d < t + 60; d++){
+    var p = passageOn(d); if (!p) break;
+    days.push({d: d, id: p.id, text: p.text, src: [p.author, p.book].filter(Boolean).join(", ")});
+  }
+  try { APP.setSchedule(JSON.stringify({days: days})); } catch(e){}
+}
+
+/* ---------- Routes ---------- */
+function route(){
+  if (!ready) return;
+  var h = decodeURIComponent(location.hash.replace(/^#/, "")), parts = h.split("/"), v = parts[0];
+  needsGh();
+  if (v === "keys"){ show("keys"); renderKeys(); return; }
+  if (!R.key()){ show("closed"); return; }
+  $("q").parentNode.hidden = false;
+  if (KINDS[v]){
+    listKind = KINDS[v]; listHead = parts.slice(1).join("/");
+    $("list-h").textContent = NAMES[listKind];
+    $("list-add").href = "#add/" + listKind; $("list-add").hidden = !R.ghKey();
+    show("list"); renderList(); return;
+  }
+  if (v === "h"){ show("list"); renderHeading(parts.slice(1).join("/")); return; }
+  if (v === "headings"){
+    show("heads");
+    var hs = headList();
+    $("allheads").innerHTML = hs.map(function(x){ return '<a href="' + headHref(x.name) + '">' + esc(x.name) + '<span class="n">' + x.n + "</span></a>"; }).join("");
+    $("heads-empty").hidden = !!hs.length; return;
+  }
+  if (v === "e"){
+    var e = byId(parts[1]);
+    if (!e){ location.replace("#"); return; }
+    $("entry").innerHTML = '<p class="eyebrow">' + {passage: "Passage", novel: "Novel", film: "Film"}[e.kind] + "</p>" + cardHTML(e, true);
+    $("entry-edit").href = "#edit/" + encodeURIComponent(e.id);
+    show("entry"); return;
+  }
+  if (v === "add" || v === "edit"){
+    if (!R.ghKey()){ location.replace("#keys"); return; }
+    if (v === "edit"){ var x = byId(parts[1]); if (!x){ location.replace("#"); return; } show("form"); fillForm(x.kind, x); return; }
+    show("form"); fillForm(KINDS[parts[1] + "s"] ? parts[1] : "passage", null);
+    if (shared && formKind === "passage"){ $("f-text").value = shared.text; $("f-book").value = shared.book; $("f-author").value = shared.author; }
+    return;
+  }
+  show("home"); renderHome(false);
+}
+$("another").addEventListener("click", function(ev){ ev.preventDefault(); renderHome(true); });
+$("entry-back").addEventListener("click", function(ev){ ev.preventDefault(); history.length > 1 ? history.back() : (location.hash = "#"); });
+window.addEventListener("hashchange", route);
+
+function start(){
+  ready = false;
+  var c = /#connect=/.test(location.hash) ? takeConnect(location.hash) : Promise.resolve(null);
+  c.then(function(ok){
+    if (ok !== null){ history.replaceState(null, "", location.pathname + location.search + "#keys"); if (ok) keysMsg("Both keys are on this device now."); else keysMsg("That code didn't work.", true); }
+    if (!R.key()){ ready = true; $("nav").hidden = true; route(); return; }
+    show("loading");
+    return R.load().then(function(){
+      ready = true; $("nav").hidden = false; counts(); feedApp(); route();
+      if (APP && APP.takeShared){ var s = APP.takeShared(); if (s){ try { var j = JSON.parse(s); takeShared(j.text, j.subject); } catch(e){} } }
+    });
+  }).catch(function(){ ready = true; route(); });
+}
+start();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function(){});
+</script>
+</body>
+</html>
