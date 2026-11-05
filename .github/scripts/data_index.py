@@ -1,7 +1,8 @@
 """Writes data/index.json: every locked entry in data/ with a short fingerprint of its file.
 
 Devices read this list, then fetch only the entries whose fingerprint they haven't seen. Nothing in it says
-what an entry holds. Run when the site is published (the Site workflow) or by hand.
+what an entry holds. A device that adds or changes an entry updates the list itself; the Entries workflow
+runs this as a check on every push, and it can be run by hand before committing entries from here.
 """
 import hashlib
 import json

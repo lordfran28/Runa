@@ -14,9 +14,11 @@ always show the same book.
   same "FFV1" format as Fret Finder's and Key Finder's locked tracks, so the key the owner already has
   opens it. `assets/voice-check.locked` checks a key. The private half is never in this repository or any
   page. `tools/lock_entry.mjs ENTRIES.json` locks entries from here.
-- **The list of entries** (`data/index.json`: id and a fingerprint, nothing more) is made when the site is
-  published, by `.github/scripts/data_index.py` in the *Site* workflow, which deploys Pages through
-  GitHub Actions. It is not kept in the repository.
+- **The list of entries** (`data/index.json`: id and a fingerprint, nothing more) is kept in the
+  repository. The device that adds, changes or takes out an entry updates it through the GitHub API in the
+  same step; `.github/scripts/data_index.py` rebuilds it, and the *Entries* workflow runs that on every push
+  that touches `data/` as a check. Run it by hand before committing entries from here.
+- **Pages publishes from the branch** (`main`, root), like the Finder sites. `.nojekyll` keeps every file.
 - **Adding and changing** happens in the page: it locks the entry and writes the file through the GitHub
   API with a GitHub key (fine-grained, Contents read and write on this repository only) that the owner keeps
   on each device (`runa.gh`). The singer key is `ff.voicekey`, shared with the Finder sites on the same

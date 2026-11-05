@@ -1,8 +1,8 @@
 /* Runa: the locked book.
    Every entry (a passage, a novel or a film) is its own file in data/, locked to the public half of the
    singer key, the same key and format as Fret Finder's and Key Finder's locked tracks ("FFV1"). Only a device
-   that holds the singer key can open them. data/index.json, written when the site is published, lists the
-   files and a short fingerprint of each, so a device fetches only what changed.
+   that holds the singer key can open them. data/index.json lists the files and a short fingerprint of each,
+   so a device fetches only what changed.
    Adding, changing and taking out entries goes straight to the repository through GitHub, with a GitHub key
    kept on the device. Nothing else leaves it. */
 (function () {
@@ -115,6 +115,25 @@
       return r.json();
     });
   }
+  /* data/index.json lists every entry with its fingerprint. The device that adds, changes or takes out an
+     entry brings the list up to date in the same breath, so every device sees it once the site republishes. */
+  function unb64(s) { var bin = atob(String(s).replace(/\s+/g, "")), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+  function updateIndex(id, h, tries) {
+    var path = "data/index.json";
+    return gh("GET", path).then(function (x) {
+      var ix = { entries: [] };
+      if (x && x.content) { try { ix = JSON.parse(new TextDecoder().decode(unb64(x.content))); } catch (e) {} }
+      var list = (ix.entries || []).filter(function (e) { return e.id !== id; });
+      if (h) list.push({ id: id, h: h });
+      list.sort(function (a, b) { return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; });
+      var body = { message: "Update the list of entries", content: b64(new TextEncoder().encode(JSON.stringify({ entries: list }) + "\n")), branch: BRANCH };
+      if (x && x.sha) body.sha = x.sha;
+      return gh("PUT", path, body);
+    }).catch(function (e) {
+      if ((tries || 0) < 2 && e && (e.status === 409 || e.status === 422)) return updateIndex(id, h, (tries || 0) + 1);
+      throw e;
+    });
+  }
   function b64(bytes) { var s = ""; for (var i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); }
   function newId() {
     var t = Date.now().toString(36), r = crypto.getRandomValues(new Uint8Array(3));
@@ -135,6 +154,7 @@
         return gh("PUT", path, body);
       })
       .then(function () { return fingerprint(bytes); })
+      .then(function (h) { return updateIndex(id, h).then(function () { return h; }); })
       .then(function (h) {
         var pend = getJSON(PENDING, {}); pend[id] = { op: "put", h: h, at: Date.now(), entry: e }; put(PENDING, JSON.stringify(pend));
         e.id = id;
@@ -148,7 +168,7 @@
     return gh("GET", path).then(function (x) {
       if (!x) return null;
       return gh("DELETE", path, { message: "Take out " + WORD[entry.kind], sha: x.sha, branch: BRANCH });
-    }).then(function () {
+    }).then(function () { return updateIndex(entry.id, null); }).then(function () {
       var pend = getJSON(PENDING, {}); pend[entry.id] = { op: "del", at: Date.now() }; put(PENDING, JSON.stringify(pend));
       entries = entries.filter(function (x) { return x.id !== entry.id; });
     });
