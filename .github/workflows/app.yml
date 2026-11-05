@@ -31,7 +31,11 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
           KEYSTORE_PASSWORD: ${{ secrets.RUNA_SIGNING }}
         run: |
-          if [ -z "$KEYSTORE_PASSWORD" ]; then echo "::error::The secret RUNA_SIGNING isn't set, so the app can't be signed."; exit 1; fi
+          if [ -z "$KEYSTORE_PASSWORD" ]; then
+            gradle --no-daemon assembleDebug
+            echo "::error::The app builds, but the secret RUNA_SIGNING isn't set, so it can't be signed and put on the release page."
+            exit 1
+          fi
           export KEYSTORE="$GITHUB_WORKSPACE/app/signing/runa.p12"
           gradle --no-daemon assembleRelease
           cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/Runa.apk"
