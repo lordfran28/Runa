@@ -19,10 +19,9 @@
 @font-face{font-family:"IM Fell French Canon";font-style:italic;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-italic.woff2") format("woff2")}
 @font-face{font-family:"Gothic Letters";font-style:normal;font-weight:400;font-display:swap;src:url("assets/fonts/gothic-letters.woff") format("woff");unicode-range:U+10330-1034A}
 /* Runa, Gothic for "secret" and "counsel". Built like its brothers, Fret Finder, Key Finder and Valve Finder:
-   one reading column, a framed title that sets a real piece into a band of pattern, entries on parchment cards,
-   and a band of the same pattern closing the page. The variance is Gothic: the pair of Visigothic eagle
-   brooches from the Walters set into the carved frieze of Quintanilla de las Viñas, in the brooches' own
-   colours, garnet and worn gold on parchment, garnet and gold on iron at night. */
+   one reading column, a framed title, entries on parchment cards, a band of pattern closing the page. The
+   Gothic part is only a hint: the carved vine scroll of Quintanilla de las Viñas, faint, and the name in the
+   Gothic alphabet above "Runa". Garnet and worn gold on parchment; the same on iron at night. */
 :root{
   --bg:#EDE6D9;--surface:#F9F4EB;--well:#EAE2D3;--ink:#201A16;--muted:#64584E;--line:#D4C6B0;
   --accent:#7A1F24;--accent-hi:#952B31;--accent-soft:#F1DEDA;--gold:#8C6B22;
@@ -30,7 +29,7 @@
   --veil:rgba(237,230,217,.94);
   --emboss:0 1px 0 rgba(255,252,244,.7),0 2px 3px rgba(70,20,20,.2);
   --emboss-lift:0 1px 0 rgba(255,252,244,.8),0 3px 7px rgba(70,20,20,.3);
-  --textile:url("assets/frieze-light.jpg");--textile-alpha:.09;--hero-alpha:.6;
+  --textile:url("assets/vines-light.jpg");--textile-alpha:.05;--hero-alpha:.3;
   --display:"IM Fell French Canon",Garamond,"Times New Roman",serif;
   --body:"EB Garamond",Garamond,"Garamond Premier Pro",Georgia,serif;
   --gothic:"Gothic Letters","Segoe UI Historic","Noto Sans Gothic",serif;
@@ -44,7 +43,7 @@
     --veil:rgba(19,17,16,.93);
     --emboss:0 1px 0 rgba(0,0,0,.6),0 0 6px rgba(226,160,151,.12);
     --emboss-lift:0 1px 0 rgba(0,0,0,.7),0 0 12px rgba(226,160,151,.3);
-    --textile:url("assets/frieze-dark.jpg");--textile-alpha:.07;--hero-alpha:.6;
+    --textile:url("assets/vines-dark.jpg");--textile-alpha:.05;--hero-alpha:.35;
     color-scheme:dark;
   }
 }
@@ -65,21 +64,14 @@ p{margin:0}
 .small{font-size:.98rem;color:var(--muted)}
 .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* The framed title: the eagle brooches set into the frieze */
-.hero{position:relative;overflow:hidden;isolation:isolate;height:23rem;background:var(--bg);border:1px solid var(--line)}
+/* The framed title, over a faint band of the vine scroll */
+.hero{position:relative;overflow:hidden;isolation:isolate;height:9.5rem;background:var(--bg);border:1px solid var(--line)}
 .hero::after{content:"";position:absolute;inset:5px;border:1px solid var(--line);pointer-events:none;z-index:4}
-.hero-silk{position:absolute;inset:0;background:var(--textile) 62% 50%/auto 118% repeat-x;opacity:var(--hero-alpha)}
-.hero-fig{position:absolute;left:50%;top:7%;height:62%;width:auto;max-width:none;transform:translateX(-50%);
-  filter:drop-shadow(0 6px 10px rgba(40,20,10,.45)) drop-shadow(0 1px 2px rgba(40,20,10,.35))}
-.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 22%,transparent 40%)}
-.hero-title{position:absolute;left:1.35rem;right:1.35rem;bottom:1.2rem;display:flex;flex-direction:column;gap:4px;color:var(--ink);text-decoration:none;z-index:3}
-.hero-title .goth{font:400 1.25rem/1 var(--gothic);color:var(--gold);letter-spacing:.12em}
-@media (min-width:600px){
-  .hero{height:22rem}
-  .hero-fig{left:auto;right:5%;top:8%;height:84%;transform:none}
-  .hero-veil{background:radial-gradient(ellipse 66% 85% at 0% 100%,var(--veil) 0%,var(--veil) 36%,transparent 70%)}
-  .hero-title{right:auto;bottom:1.7rem;left:1.8rem}
-}
+.hero-silk{position:absolute;inset:0;background:var(--textile) 85% 50%/auto 100% repeat-x;opacity:var(--hero-alpha)}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(to right,var(--veil) 0%,var(--veil) 22%,transparent 70%)}
+.hero-title{position:absolute;left:1.35rem;bottom:1.15rem;display:flex;flex-direction:column;gap:4px;color:var(--ink);text-decoration:none;z-index:3}
+.hero-title .goth{font:400 1.1rem/1 var(--gothic);color:var(--gold);letter-spacing:.12em}
+@media (min-width:600px){.hero{height:10.5rem}.hero-title{left:1.8rem;bottom:1.4rem}}
 
 /* The ways into the book, as embossed words like the Finders' buttons */
 .nav{display:flex;flex-wrap:wrap;gap:2px 22px;align-items:baseline}
@@ -147,7 +139,7 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 .foot p{max-width:64ch}
 .credits{font-style:italic}
 .foot a{color:var(--muted)}
-.silk-band{height:7rem;margin:28px calc(-1 * max(16px, env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left,0px)));background:var(--textile) center/auto 100% repeat-x;opacity:var(--hero-alpha);
+.silk-band{height:5rem;margin:28px calc(-1 * max(16px, env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left,0px)));background:var(--textile) center/auto 100% repeat-x;opacity:var(--hero-alpha);
   -webkit-mask-image:linear-gradient(to bottom,transparent,#000 75%);mask-image:linear-gradient(to bottom,transparent,#000 75%)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -156,7 +148,6 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 <div class="wrap">
   <header class="hero">
     <div class="hero-silk" aria-hidden="true"></div>
-    <img class="hero-fig" src="assets/eagles.webp" width="1000" height="808" alt="Two Visigothic eagle brooches of gold over bronze, set with garnets and coloured glass">
     <div class="hero-veil" aria-hidden="true"></div>
     <a class="hero-title" href="#"><span class="goth" lang="got" aria-hidden="true">&#x10342;&#x1033F;&#x1033D;&#x10330;</span><h1>Runa</h1></a>
   </header>
@@ -259,8 +250,7 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
     </section>
   </main>
   <footer class="foot">
-    <p class="credits"><a href="https://art.thewalters.org/detail/13833" target="_blank" rel="noopener">Pair of eagle brooches</a>, Visigothic, 6th century, the Walters Art Museum ·
-      <a href="https://commons.wikimedia.org/wiki/File:Santa_Mar%C3%ADa._Quintanilla_de_las_Vi%C3%B1as._Friso_exterior_2.jpg" target="_blank" rel="noopener">Frieze of Santa María de Quintanilla de las Viñas</a>, 7th century, photograph by Nacho Cobos (CC BY-SA 4.0)</p>
+    <p class="credits"><a href="https://commons.wikimedia.org/wiki/File:Santa_Mar%C3%ADa._Quintanilla_de_las_Vi%C3%B1as._Friso_exterior_1.jpg" target="_blank" rel="noopener">Vine scroll</a>, Santa María de Quintanilla de las Viñas, 7th century, photograph by Nacho Cobos (CC BY-SA 4.0)</p>
     <p><a href="#keys">Keys</a></p>
   </footer>
 </div>
