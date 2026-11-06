@@ -23,6 +23,11 @@ always show the same book.
   API with a GitHub key (fine-grained, Contents read and write on this repository only) that the owner keeps
   on each device (`runa.gh`). The singer key is `ff.voicekey`, shared with the Finder sites on the same
   origin. The Keys page shows a code that puts both keys on the phone.
+- **What the owner sees.** A closed book shows only a key field (a password field, so the browser can keep
+  the key) and, in the app, "Scan the code from the computer". Open, the front page is the book itself:
+  today's passage, then shelves of the newest passages, the novels, the films and the headings. Keys and
+  the phone code live on a plain "This device" page linked small at the foot, with the words "key" and
+  "writing key" only; the owner called the earlier key screens "a bunch of coding stuff".
 - **Today's passage** is chosen from the date alone, so every device shows the same one; each passage
   comes once before any comes twice.
 

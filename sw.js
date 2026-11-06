@@ -1,6 +1,6 @@
 /* Keeps Runa readable without a connection. Entries are fetched by fingerprint, so a stored one never goes
    stale; the page and the list of entries are fetched fresh whenever there is a connection. */
-var V = "runa-3";
+var V = "runa-4";
 var CORE = ["./", "index.html", "assets/runa.js", "assets/voice-key.json", "assets/voice-check.locked", "manifest.webmanifest", "assets/vines-light.jpg", "assets/vines-dark.jpg", "assets/fonts/gothic-letters.woff",
   "assets/fonts/eb-garamond-latin-wght-normal.woff2", "assets/fonts/eb-garamond-latin-wght-italic.woff2",
   "assets/fonts/im-fell-french-canon-latin-400-normal.woff2", "assets/fonts/im-fell-french-canon-latin-400-italic.woff2"];

@@ -130,7 +130,25 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,
 .msg:empty{display:none}
 .qr{width:13.5rem;max-width:100%;background:#fff;padding:10px;border:1px solid var(--line);border-radius:3px}
 .qr svg{display:block;width:100%;height:auto}
-.closed{align-items:center;gap:10px;padding:28px 0 10px;text-align:center}
+.closed{align-items:center;gap:10px;padding:34px 0 18px;text-align:center}
+.openform{display:flex;gap:10px 16px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;max-width:24rem}
+.openform input[type=password]{flex:1 1 12rem;text-align:center;letter-spacing:.06em}
+.shelf{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.shelf-h{display:flex;align-items:baseline;gap:4px 18px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:6px}
+.shelf-h h2{font-size:1.6rem;margin-right:auto}
+.shelf-h .btn{min-height:2rem;font-size:1.1rem}
+.titles{gap:0}
+.titles li{border-bottom:1px solid var(--line)}
+.titles li:last-child{border-bottom:0}
+.titles a{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;padding:9px 2px;color:var(--ink);text-decoration:none}
+.titles a:hover .ctitle{color:var(--accent)}
+.titles .ctitle{font-size:1.3rem}
+.titles .cmeta{margin:0}
+.none{font-style:italic;color:var(--muted)}
+#home-passage .text.clip{-webkit-line-clamp:3}
+#home-passage .text{font-size:1.12rem}
+.setting{display:flex;flex-direction:column;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
+.setting:last-of-type{border-bottom:0}
 .closed p{font-style:italic;color:var(--muted);font-size:1.15rem}
 hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 
@@ -160,16 +178,37 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 
   <main id="main">
     <section id="v-closed" class="view closed" hidden>
-      <p>This book is closed.</p>
-      <a class="btn primary" href="#keys">Open it</a>
+      <form id="open-form" class="openform" autocomplete="on">
+        <input type="text" name="username" value="Runa" autocomplete="username" hidden>
+        <label for="open-in" class="vh">Key</label>
+        <input id="open-in" name="password" type="password" placeholder="Key" spellcheck="false" autocomplete="current-password">
+        <button class="btn primary" type="submit" id="open-go">Open</button>
+      </form>
+      <button class="btn" type="button" id="open-scan" hidden>Scan the code from the computer</button>
+      <p class="msg" id="open-msg" role="status"></p>
     </section>
 
     <section id="v-loading" class="view closed"><p>Opening…</p></section>
 
     <section id="v-home" class="view" hidden>
       <article id="today" class="card today" aria-labelledby="today-h"></article>
-      <div class="row spread"><a class="btn link" href="#" id="another">Another</a><a class="btn" href="#add/passage" data-needs-gh>Add a passage</a></div>
-      <section aria-labelledby="hh-h" id="homeheads-wrap"><h3 id="hh-h" class="vh">Headings</h3><div class="chips" id="homeheads"></div></section>
+      <div class="row"><a class="btn link" href="#" id="another">Another</a></div>
+      <section class="shelf" aria-labelledby="sh-passage">
+        <div class="shelf-h"><h2 id="sh-passage">Passages</h2><a class="btn link" href="#passages" id="all-passage"></a><a class="btn" href="#add/passage" data-needs-gh>Add</a></div>
+        <ul class="list" id="home-passage"></ul>
+      </section>
+      <section class="shelf" aria-labelledby="sh-novel">
+        <div class="shelf-h"><h2 id="sh-novel">Novels</h2><a class="btn link" href="#novels" id="all-novel"></a><a class="btn" href="#add/novel" data-needs-gh>Add</a></div>
+        <ul class="list titles" id="home-novel"></ul>
+      </section>
+      <section class="shelf" aria-labelledby="sh-film">
+        <div class="shelf-h"><h2 id="sh-film">Films</h2><a class="btn link" href="#films" id="all-film"></a><a class="btn" href="#add/film" data-needs-gh>Add</a></div>
+        <ul class="list titles" id="home-film"></ul>
+      </section>
+      <section class="shelf" aria-labelledby="sh-heads">
+        <div class="shelf-h"><h2 id="sh-heads">Headings</h2></div>
+        <div class="chips" id="homeheads"></div>
+      </section>
     </section>
 
     <section id="v-list" class="view" hidden>
@@ -219,39 +258,35 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
     </section>
 
     <section id="v-keys" class="view" hidden>
-      <h2>Keys</h2>
-      <section class="view" aria-labelledby="k1">
-        <h3 id="k1">The singer key</h3>
-        <p class="small" id="k-status"></p>
-        <div class="field" id="k-entry"><label for="k-in">Key</label><input id="k-in" autocomplete="off" spellcheck="false"></div>
-        <div class="row"><button class="btn primary" type="button" id="k-save">Open the book</button><button class="btn link" type="button" id="k-forget" hidden>Remove it from this device</button></div>
-      </section>
-      <hr class="rule">
-      <section class="view" aria-labelledby="k2">
-        <h3 id="k2">The GitHub key</h3>
+      <h2>This device</h2>
+      <div class="setting">
+        <h3>Reading</h3>
+        <p class="small">The book opens here.</p>
+        <div class="row"><button class="btn link" type="button" id="k-forget">Close it on this device</button></div>
+      </div>
+      <div class="setting">
+        <h3>Writing</h3>
         <p class="small" id="g-status"></p>
-        <div class="field" id="g-entry"><label for="g-in">Key</label><input id="g-in" autocomplete="off" spellcheck="false"></div>
-        <div class="row"><button class="btn primary" type="button" id="g-save">Keep it</button><button class="btn link" type="button" id="g-forget" hidden>Remove it from this device</button></div>
-      </section>
-      <hr class="rule">
-      <section class="view" aria-labelledby="k3" id="pairsec">
-        <h3 id="k3">Your phone</h3>
+        <div class="row" id="g-entry"><div class="field" style="flex:1 1 16rem"><label for="g-in" class="vh">Writing key</label><input id="g-in" type="password" placeholder="Writing key" autocomplete="off" spellcheck="false"></div><button class="btn primary" type="button" id="g-save">Keep it</button></div>
+        <div class="row"><button class="btn link" type="button" id="g-forget" hidden>Stop writing from this device</button></div>
+      </div>
+      <div class="setting" id="pairsec">
+        <h3>Your phone</h3>
         <div class="row"><button class="btn" type="button" id="pair">Show the code</button><button class="btn" type="button" id="scan" hidden>Scan the code</button></div>
-        <div id="qr" class="qr" role="img" aria-label="Code that puts both keys on your phone" hidden></div>
-      </section>
-      <section class="view" aria-labelledby="k4" id="daily" hidden>
-        <hr class="rule">
-        <h3 id="k4">Each day</h3>
-        <div class="row"><div class="field" style="width:9rem"><label for="d-time">Time</label><input id="d-time" type="time" value="08:00"></div>
-          <button class="btn" type="button" id="d-on" aria-pressed="false">Send a passage</button></div>
+        <div id="qr" class="qr" role="img" aria-label="Code that opens the book on your phone" hidden></div>
+      </div>
+      <div class="setting" id="daily" hidden>
+        <h3>A passage each day</h3>
+        <div class="row"><div class="field" style="width:9rem"><label for="d-time" class="vh">Time</label><input id="d-time" type="time" value="08:00"></div>
+          <button class="btn" type="button" id="d-on" aria-pressed="false">Send it</button></div>
         <p class="small" id="d-status"></p>
-      </section>
+      </div>
       <p class="msg" id="keys-msg" role="status"></p>
     </section>
   </main>
   <footer class="foot">
     <p class="credits"><a href="https://commons.wikimedia.org/wiki/File:Santa_Mar%C3%ADa._Quintanilla_de_las_Vi%C3%B1as._Friso_exterior_1.jpg" target="_blank" rel="noopener">Vine scroll</a>, Santa María de Quintanilla de las Viñas, 7th century, photograph by Nacho Cobos (CC BY-SA 4.0)</p>
-    <p><a href="#keys">Keys</a></p>
+    <p id="devlink" hidden><a href="#keys">This device</a></p>
   </footer>
 </div>
 <div class="silk-band" aria-hidden="true"></div>
@@ -327,9 +362,24 @@ function renderHome(other){
       '<p style="margin-top:10px"><a class="btn link" href="#e/' + encodeURIComponent(p.id) + '">Open</a></p>'
     : '<p class="eyebrow" id="today-h">Today</p><p class="msg" style="margin-top:8px">No passages yet.</p>';
   $("another").hidden = all("passage").length < 2;
+  if (other) return;
+  /* the shelves: the newest passages, and every novel and film */
+  var ps = all("passage").filter(function(x){ return x.id !== shownId; })
+    .sort(function(a, b){ return String(b.added || "").localeCompare(String(a.added || "")); });
+  $("home-passage").innerHTML = ps.slice(0, 3).map(itemHTML).join("") || '<li class="none">None yet.</li>';
+  ["novel", "film"].forEach(function(k){
+    var xs = all(k).sort(function(a, b){ return String(a.title || "").localeCompare(String(b.title || ""), undefined, {sensitivity: "base"}); });
+    $("home-" + k).innerHTML = xs.slice(0, 12).map(function(e){
+      return '<li><a href="#e/' + encodeURIComponent(e.id) + '"><span class="ctitle">' + esc(e.title) + '</span><span class="cmeta">' + srcLine(e) + "</span></a></li>"; }).join("")
+      || '<li class="none">None yet.</li>';
+  });
+  ["passage", "novel", "film"].forEach(function(k){
+    var n = all(k).length, more = k === "passage" ? n > 4 : n > 12;
+    $("all-" + k).textContent = more ? "All " + n : ""; $("all-" + k).hidden = !more;
+  });
   var hs = headList();
-  $("homeheads").innerHTML = hs.map(function(h){ return '<a href="' + headHref(h.name) + '">' + esc(h.name) + '<span class="n">' + h.n + "</span></a>"; }).join("");
-  $("homeheads-wrap").hidden = !hs.length;
+  $("homeheads").innerHTML = hs.map(function(h){ return '<a href="' + headHref(h.name) + '">' + esc(h.name) + '<span class="n">' + h.n + "</span></a>"; }).join("")
+    || '<span class="none">None yet.</span>';
 }
 function counts(){
   ["passage", "novel", "film"].forEach(function(k){ var n = all(k).length; $("n-" + k).textContent = n ? n : ""; });
@@ -447,9 +497,7 @@ window.runaShared = takeShared;
 function keysMsg(t, err){ $("keys-msg").textContent = t || ""; $("keys-msg").className = "msg" + (err ? " err" : ""); }
 function renderKeys(){
   var k = R.key(), g = R.ghKey();
-  $("k-status").textContent = k ? "This device holds it, so the book opens here." : "Without it the book stays closed.";
-  $("k-entry").hidden = !!k; $("k-save").hidden = !!k; $("k-forget").hidden = !k;
-  $("g-status").textContent = g ? "This device holds it, so you can add and change things here." : "With it you can add and change things on this device.";
+  $("g-status").textContent = g ? "You can add and change things here." : "Paste the writing key to add and change things from here.";
   $("g-entry").hidden = !!g; $("g-save").hidden = !!g; $("g-forget").hidden = !g;
   $("pairsec").hidden = !k && !APP;
   $("pair").hidden = !k || !!APP;
@@ -460,24 +508,30 @@ function renderKeys(){
     var r = String(APP.getReminder() || "");
     if (r) $("d-time").value = r;
     $("d-on").setAttribute("aria-pressed", String(!!r));
-    $("d-on").textContent = r ? "Stop sending" : "Send a passage";
+    $("d-on").textContent = r ? "Stop" : "Send it";
     $("d-status").textContent = r ? "A passage comes each day at " + r + "." : "";
   }
 }
-$("k-save").addEventListener("click", function(){
-  var v = $("k-in").value.trim(); if (!v) return;
-  keysMsg("Checking…");
+/* The closed book: the key, once, and it opens */
+function openMsg(t, err){ $("open-msg").textContent = t || ""; $("open-msg").className = "msg" + (err ? " err" : ""); }
+$("open-form").addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var v = $("open-in").value.trim(); if (!v) return;
+  $("open-go").disabled = true; openMsg("");
   R.testKey(v).then(function(ok){
-    if (!ok) return keysMsg("That isn't the key.", true);
-    R.setKey(v); $("k-in").value = ""; keysMsg(""); start();
+    $("open-go").disabled = false;
+    if (!ok) return openMsg("That isn't the key.", true);
+    R.setKey(v); $("open-in").value = "";
+    if (/^#keys/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+    start();
   });
 });
-$("k-forget").addEventListener("click", function(){ R.setKey(""); renderKeys(); keysMsg("Removed from this device."); });
+$("k-forget").addEventListener("click", function(){ R.setKey(""); R.setGhKey(""); location.hash = ""; start(); });
 $("g-save").addEventListener("click", function(){
   var v = $("g-in").value.trim(); if (!v) return;
   keysMsg("Checking…");
   R.checkGh(v).then(function(ok){
-    if (!ok) return keysMsg("GitHub didn't accept that key for Runa.", true);
+    if (!ok) return keysMsg("That writing key didn't work.", true);
     R.setGhKey(v); $("g-in").value = ""; keysMsg(""); renderKeys(); needsGh();
   });
 });
@@ -505,9 +559,10 @@ function takeConnect(text){
   });
 }
 window.runaScanned = function(text){
-  takeConnect(text).then(function(ok){ if (ok){ keysMsg("Both keys are on this device now."); start(); } else keysMsg("That code isn't from Runa.", true); });
+  takeConnect(text).then(function(ok){ if (ok) start(); else { openMsg("That code isn't from Runa.", true); keysMsg("That code isn't from Runa.", true); } });
 };
 $("scan").addEventListener("click", function(){ if (APP && APP.scan) APP.scan(); });
+$("open-scan").addEventListener("click", function(){ if (APP && APP.scan) APP.scan(); });
 $("d-on").addEventListener("click", function(){
   if (!APP) return;
   var on = $("d-on").getAttribute("aria-pressed") === "true";
@@ -532,8 +587,9 @@ function route(){
   if (!ready) return;
   var h = decodeURIComponent(location.hash.replace(/^#/, "")), parts = h.split("/"), v = parts[0];
   needsGh();
+  $("devlink").hidden = !R.key();
+  if (!R.key()){ show("closed"); $("open-scan").hidden = !(APP && APP.scan); return; }
   if (v === "keys"){ show("keys"); renderKeys(); return; }
-  if (!R.key()){ show("closed"); return; }
   $("q").parentNode.hidden = false;
   if (KINDS[v]){
     listKind = KINDS[v]; listHead = parts.slice(1).join("/");
@@ -572,7 +628,7 @@ function start(){
   ready = false;
   var c = /#connect=/.test(location.hash) ? takeConnect(location.hash) : Promise.resolve(null);
   c.then(function(ok){
-    if (ok !== null){ history.replaceState(null, "", location.pathname + location.search + "#keys"); if (ok) keysMsg("Both keys are on this device now."); else keysMsg("That code didn't work.", true); }
+    if (ok !== null){ history.replaceState(null, "", location.pathname + location.search); if (!ok) openMsg("That code didn't work.", true); }
     if (!R.key()){ ready = true; $("nav").hidden = true; route(); return; }
     show("loading");
     return R.load().then(function(){
