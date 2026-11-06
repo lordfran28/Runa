@@ -30,7 +30,7 @@
   --veil:rgba(237,230,217,.94);
   --emboss:0 1px 0 rgba(255,252,244,.7),0 2px 3px rgba(70,20,20,.2);
   --emboss-lift:0 1px 0 rgba(255,252,244,.8),0 3px 7px rgba(70,20,20,.3);
-  --textile:url("assets/frieze-light.jpg");--textile-alpha:.12;--hero-alpha:.6;
+  --textile:url("assets/frieze-light.jpg");--textile-alpha:.09;--hero-alpha:.6;
   --display:"IM Fell French Canon",Garamond,"Times New Roman",serif;
   --body:"EB Garamond",Garamond,"Garamond Premier Pro",Georgia,serif;
   --gothic:"Gothic Letters","Segoe UI Historic","Noto Sans Gothic",serif;
@@ -44,7 +44,7 @@
     --veil:rgba(19,17,16,.93);
     --emboss:0 1px 0 rgba(0,0,0,.6),0 0 6px rgba(226,160,151,.12);
     --emboss-lift:0 1px 0 rgba(0,0,0,.7),0 0 12px rgba(226,160,151,.3);
-    --textile:url("assets/frieze-dark.jpg");--textile-alpha:.4;--hero-alpha:.9;
+    --textile:url("assets/frieze-dark.jpg");--textile-alpha:.07;--hero-alpha:.6;
     color-scheme:dark;
   }
 }
@@ -53,7 +53,7 @@
 html{background:var(--bg);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);-webkit-text-size-adjust:100%}
 body{position:relative;z-index:0;margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.55 var(--body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 0}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--textile) center/cover no-repeat;opacity:var(--textile-alpha)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--textile) center top/min(1100px,190vw) auto repeat;opacity:var(--textile-alpha)}
 .wrap{max-width:46rem;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 .view{display:flex;flex-direction:column;gap:16px}
 h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;letter-spacing:.005em;text-wrap:balance}
@@ -68,22 +68,22 @@ p{margin:0}
 /* The framed title: the eagle brooches set into the frieze */
 .hero{position:relative;overflow:hidden;isolation:isolate;height:23rem;background:var(--bg);border:1px solid var(--line)}
 .hero::after{content:"";position:absolute;inset:5px;border:1px solid var(--line);pointer-events:none;z-index:4}
-.hero-silk{position:absolute;inset:0;background:var(--textile) 50% 40%/max(170%,44rem) auto no-repeat;opacity:var(--hero-alpha)}
-.hero-fig{position:absolute;right:-12%;top:-2%;height:84%;width:auto;max-width:none;
-  -webkit-mask-image:radial-gradient(ellipse 44% 47% at 50% 50%,#000 58%,transparent 100%);
-  mask-image:radial-gradient(ellipse 44% 47% at 50% 50%,#000 58%,transparent 100%)}
-.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 26%,transparent 48%)}
+.hero-silk{position:absolute;inset:0;background:var(--textile) 62% 50%/auto 118% repeat-x;opacity:var(--hero-alpha)}
+.hero-fig{position:absolute;left:50%;top:7%;height:62%;width:auto;max-width:none;transform:translateX(-50%);
+  filter:drop-shadow(0 6px 10px rgba(40,20,10,.45)) drop-shadow(0 1px 2px rgba(40,20,10,.35))}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 22%,transparent 40%)}
 .hero-title{position:absolute;left:1.35rem;right:1.35rem;bottom:1.2rem;display:flex;flex-direction:column;gap:4px;color:var(--ink);text-decoration:none;z-index:3}
 .hero-title .goth{font:400 1.25rem/1 var(--gothic);color:var(--gold);letter-spacing:.12em}
 @media (min-width:600px){
   .hero{height:22rem}
-  .hero-fig{right:-2%;top:-6%;height:112%}
+  .hero-fig{left:auto;right:5%;top:8%;height:84%;transform:none}
   .hero-veil{background:radial-gradient(ellipse 66% 85% at 0% 100%,var(--veil) 0%,var(--veil) 36%,transparent 70%)}
   .hero-title{right:auto;bottom:1.7rem;left:1.8rem}
 }
 
 /* The ways into the book, as embossed words like the Finders' buttons */
 .nav{display:flex;flex-wrap:wrap;gap:2px 22px;align-items:baseline}
+@media (max-width:440px){.nav{gap:2px 14px}.nav a{font-size:1.14rem}.nav .n{margin-left:3px}}
 .nav a,.btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.6rem;padding:4px 2px;cursor:pointer;border:0;border-radius:0;
   font:400 1.3rem/1.1 var(--display);color:var(--accent);text-decoration:none;user-select:none;-webkit-tap-highlight-color:transparent;
   background:linear-gradient(currentColor,currentColor) left calc(100% - 6px)/0 1px no-repeat;
@@ -147,7 +147,7 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 .foot p{max-width:64ch}
 .credits{font-style:italic}
 .foot a{color:var(--muted)}
-.silk-band{height:6rem;margin:28px calc(-1 * max(16px, env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left,0px)));background:var(--textile) center 60%/cover no-repeat;opacity:var(--hero-alpha);
+.silk-band{height:7rem;margin:28px calc(-1 * max(16px, env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left,0px)));background:var(--textile) center/auto 100% repeat-x;opacity:var(--hero-alpha);
   -webkit-mask-image:linear-gradient(to bottom,transparent,#000 75%);mask-image:linear-gradient(to bottom,transparent,#000 75%)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -156,7 +156,7 @@ hr.rule{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 <div class="wrap">
   <header class="hero">
     <div class="hero-silk" aria-hidden="true"></div>
-    <img class="hero-fig" src="assets/eagles.jpg" width="1100" height="900" alt="Two Visigothic eagle brooches of gold over bronze, set with garnets and coloured glass">
+    <img class="hero-fig" src="assets/eagles.webp" width="1000" height="808" alt="Two Visigothic eagle brooches of gold over bronze, set with garnets and coloured glass">
     <div class="hero-veil" aria-hidden="true"></div>
     <a class="hero-title" href="#"><span class="goth" lang="got" aria-hidden="true">&#x10342;&#x1033F;&#x1033D;&#x10330;</span><h1>Runa</h1></a>
   </header>

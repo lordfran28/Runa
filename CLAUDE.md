@@ -42,7 +42,12 @@ always show the same book.
 - Like the Finder sites (EB Garamond and IM Fell, one reading column, parchment cards) with a slight,
   subtle Gothic variance: garnet, worn gold and dark iron. Patterns and the icon only from real Gothic
   pieces (Visigothic and Ostrogothic brooches, crowns and the like), never newly drawn or generated.
-  The current icon, a plain R, stands in until the owner picks one.
+  The title sets the Walters pair of Visigothic eagle brooches (54.421, 54.422, public domain), cut from
+  their photograph's grey ground, into the carved frieze of Santa María de Quintanilla de las Viñas (7th
+  century; photograph by Nacho Cobos, CC BY-SA 4.0, credited at the foot). The frieze, recoloured umber on
+  parchment and gold on iron, is the faint pattern behind the page and the band at its foot. The app icon is
+  the right-hand eagle on dark iron. "Runa" is written above the name in the Gothic alphabet, from a subset
+  of FreeSerif (`assets/fonts/gothic-letters.woff`).
 - Nothing Jewish or Hebrew anywhere; the owner asked for that.
 - Phone first: 390 px wide, no sideways scroll, light and dark.
 
